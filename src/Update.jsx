@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './home.css';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import './update.css';
 
-const Home = () => {
+const Update = () => {
 
     const [employee, setEmployee] = useState([]);
 
@@ -16,25 +15,22 @@ const Home = () => {
             catch(err){
                 console.log(err);
             }
-        };
-        fetchAllBooks();
+        };fetchAllBooks();
     }, []);
 
-    console.log(employee);
+    const handleDelete = async (id) => {
+        try{
+            await axios.delete(`http://localhost:5000/users/${id}`);
+            window.location.reload();
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
 
   return (
-    <div className="home">
-      <h1>Employee Management System</h1>
-      <div className="buttons">
-        <Link to="/add" className="action-button">
-          Add Employee
-        </Link>
-        <Link to="/update" className="action-button">
-          Update Employee
-        </Link>
-      </div>
-      <div className="employee-table">
-      <h2>Employee Details</h2>
+    <div className="employee-table">
+        <a href="/">Employee Details</a>
       <table>
         <thead>
           <tr>
@@ -42,6 +38,7 @@ const Home = () => {
             <th>Position</th>
             <th>Salary</th>
             <th>Join Date</th>
+            <th>Update</th>
           </tr>
         </thead>
         <tbody>
@@ -51,13 +48,16 @@ const Home = () => {
               <td>{emp.position}</td>
               <td>{emp.salary}</td>
               <td>{new Date(emp.joindate).toLocaleDateString()}</td>
+              <td>
+                <button onClick={() => handleDelete(emp.id)}>Delete</button>
+                <button>Edit</button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Update
